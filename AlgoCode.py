@@ -21,8 +21,8 @@ def X_pos(ch1,ch2):
 
 
 
-#nom1=input("Donner Le nom du programme\n")
-#nom2=input("Donner Le nom du fichier\n")
+#nom1=input("Donner Le nom du fichier en python\n")
+#nom2=input("Donner Le nom pour le fichier en text\n")
 #al=input("Donner Le nom de l'algorithme :\n")
 
 nom1="py"
@@ -41,7 +41,8 @@ with open(nom1+".py", "r") as fichier1, open(nom2+".txt", "w") as fichier2:
         sc=[]
         b=[]
         d=[]
-        e=" "
+        h=""
+        e=""
         if "\n" in s:
             s=s[0:len(s)-1]
         if "," in s :
@@ -49,27 +50,37 @@ with open(nom1+".py", "r") as fichier1, open(nom2+".txt", "w") as fichier2:
             x=X_pos(",",s)
             x.insert(0,s.find("("))
             x.append(s.find(")"))
-            
-            for i in range (len(x)-1):
-                sc.append(s[x[i]+1:x[i+1]])
+            y=s[0:s.find("(")+1]
+            for l in range (len(x)-1):
+                sc.append(s[x[l]+1:x[l+1]+1]) #sc.append(s[x[l]+1:x[l+1]]) : pour enlrver les ','
             for j in range (len(sc)):
-                if ("'" != sc[i][0] or '"' != sc[i][0]):
-                    if "%" in sc[i]:
-                        b=X_pos("%",sc[i])
-                        v=sc[i]
+                if ("'" != sc[j][0] and '"' != sc[j][0]):
+                    if "%" in sc[j]:
+                        b=X_pos("%",sc[j])
+                        d=X_pos("//",sc[j])
+                        v=list(sc[j])
                         for k in range (len(b)):
-                            v.pop(len(b)-k-1) #problem
-                            v.insert(len(b)-k," mod ") #problem
-                            sc[i]=v
-                    if "//" in sc[i]:
+                            v.pop(b[len(b)-k-1]) 
+                            v.insert(b[len(b)-k-1]," mod ")
+                            for l in range(len(v)):
+                                h=h+v[l]
+                            
+                            sc[j]=h
+                    if "//" in sc[j]:
                         k=0
-                        d=X_pos("//",sc[i])
+                        w=""
                         for k in range (len(d)):
-                            v.pop(len(d)-k-1) #problem
-                            v.insert(len(d)-k," div ") #problem
-                            sc[i]=v
+                            v.pop(d[len(d)-k-1])
+                            v.pop(d[len(d)-k-1])
+                            v.insert(d[len(d)-1]," div ")
+                        k=0
+                        for k in range(len(v)):
+                            w=w+v[k]
+                        k=0
+                        for k in range(len(sc)):
+                            sc[j]=w
                             e=e+sc[k]
-                    s=e
+                    s=y+e
         if "print" in s :
             x = s.find("print")
             z.append("ecrire"+s[x+5:len(s)])
@@ -84,10 +95,10 @@ with open(nom1+".py", "r") as fichier1, open(nom2+".txt", "w") as fichier2:
         else :
             if s != "" and s != " ":
                 print("ERROR on line ",c)
-            i-=1
+            
         i+=1
         c+=1
-    for j in range (i-1):
+    for j in range (i):
         if z[j] != " " and z[j] != "":
             fichier2.write("    "+z[j]+"\n")
 
