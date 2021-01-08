@@ -21,11 +21,6 @@ def d2_to_d1(tb):
         for j in range(len(tb[i])):
             sc.append(tb[i][j])
     return sc
-
-
-
-
-        
 def col(sc):
     w=""
     for i in range(len(sc)):
@@ -48,7 +43,6 @@ def change(ch1,ch2,ch3):
 def A_pos(ch1,chP,prf):
     prfPos=[]
     j=0
-    sc=chP
     chP=chP[0:ch1]
     for i in range(len(prf)):
         prfPos.append(X_pos(prf[i],chP))
@@ -75,26 +69,39 @@ al="al" #to del
 v=[]
 prf1=['"',",",'"',"+","-","*","/","%","//","mod","div","(",")","=","==","\n","\t"]
     
-t_f=True
 i=0 #don't tatch(i)
 c=1 #don't tatch(c)
 z=[]
-index=[]
+y=[]
 
 with open(nom1+".py", "r",encoding="utf-8") as fichier1, open(nom2+".txt", "w",encoding="utf-8") as fichier2:
     fichier2.write("algorithme "+al+"\n")
     fichier2.write("debut\n")
     for s in fichier1:
-        
-
-
-        
+        y.append(s[0:2])
+        for n in range (len(y)):
+            mmm=len(y)-1-n
+            if "if" == y[mmm] and "\t" in y[len(y)-2] and "\t" not in s and "el" not in s:
+                l=0
+                for j in range (mmm):
+                    v.append(y[mmm:len(y)])
+                    x=0
+                    for k in range (len(v)-1):
+                        if v[k]==v[k+1]:
+                            x+=1
+                        if x == len(v)-1:#n
+                            l+=1
+                            if l==1:
+                                z.append("finsi")
+                                i+=1  
+                            break
+        v=[]
         if "\n" in s:
             s=s[0:len(s)-1]
-        
         s=change("len","long",s)
-        s=change("%","mod",s)
-        s=change("//","div",s)
+        s=change("%"," mod ",s)
+        s=change("//"," div ",s)
+        s=change("==","☺",s)
         
         if "[" in s and ":" in s and "]" in s: #sous_chain
             v.append(X_pos("[",s))
@@ -112,70 +119,64 @@ with open(nom1+".py", "r",encoding="utf-8") as fichier1, open(nom2+".txt", "w",e
                     var=s[t+1:v[0][ff]]
                     s=s[0:t+1]+"sous_chain("+var+","+s[v[0][ff]+1:v[1][ff]]+","+s[v[1][ff]+1:v[2][ff]]+")"+s[v[2][ff]+1:len(s)]     
             v=[]
-            m=0
-            t_f=True
             
         if "elif" in s and ":" in s and s.find(":")==len(s)-1:
             s=change("elif","sinon si",s)
             s=change(":","alors",s)
-            t_f=True
         if "if" in s and ":" in s and s.find(":")==len(s)-1:
             s=change("if","si",s)
             s=change(":","alors",s)
-            t_f=True
         if "else:" in s or "else :" in s and s.find(":")==len(s)-1:
             s=change("else:","sinon",s)
             s=change("else :","sinon",s)
-            t_f=True
         
-            
         if ".find(" in s and ")" in s: #find ,pos()
             v.append(X_pos(".find(",s))
             v.append(X_pos(")",s))
-            minn=min(len(v[0]),len(v[1]))
-            for m in range (minn):
-                ff=minn-m-1
-                if v[0][ff] < v[1][ff]:
-                    t=A_pos(v[0][ff],s,prf1)
+            v[0].reverse()
+            v[1].reverse()
+            if len(v[0])!= len(v[1]):
+                for m in range (len(v[0])):
+                    for n in range (len(v[0])):
+                        if len(v[0])== len(v[1]):
+                            None
+                        elif (v[0][n] < v[1][n] and v[0][n]>v[1][n+1])==False:
+                            v[1].pop(n)
+                            break
+    
+                         
+                print(v[0],v[1])#
+            for m in range (len(v[0])):
+                if v[0][m] < v[1][m] or 1==1:
+                    t=A_pos(v[0][m],s,prf1)
                     if t!=[]:
                         t=max(d2_to_d1(t))
                     else:
                         t=-1
-                    var=s[t+1:v[0][ff]]
-                    s=s[0:t+1]+"pos("+s[v[0][ff]+6:v[1][ff]]+","+var+s[v[1][ff]:len(s)]
-            t_f=False
-            
-
+                    var=s[t+1:v[0][m]]
+                    s=s[0:t+1]+"pos("+s[v[0][m]+6:v[1][m]]+","+var+s[v[1][m]:len(s)]            
+                
+                    
         if "print" in s :
-            z.append(change("print","ecrire",s))
-            i+=1#i
-            t_f=False
+            s=(change("print","ecrire",s))
         if "input()" in s :#problem
-            z.append("lire("+s[0:s.find("=")]+")")
-            i+=1#i
-            t_f=False
-        if "input(" in s and (s[s.find("input(")+6] == '"' or s[s.find("input(")+6] == "'"):#probleml
-            v=X_pos(")",s)
-            z.append("ecrire("+s[s.find("input(")+6:v[-1]])
-            z.append("lire("+s[0:s.find("=")]+")")
-            i+=2#i
-            v=[]
-            t_f=False
-        if "=" in s and "==" not in s and len(X_pos("=",s))==1:
-            s=(s[0:s.find("=")]+"←"+s[s.find("=")+1:len(s)])
-            z.append(s)
-            i+=1#i
-            t_f=False
-        s=change("==","=",s)
-        if t_f:
             
-            print("errer on line",c)
+            s=("lire("+s[0:s.find("=")]+")")
+        if "input(" in s and (s[s.find("input(")+6] == '"' or s[s.find("input(")+6] == "'"):#problem
+            v=X_pos(")",s)
+            s=("ecrire("+s[s.find("input(")+6:v[-1]]+"\n\t"+"lire("+s[0:s.find("=")]+")")
+            v=[]
+        if "=" in s and "==" not in s:
+            s=change("=","←",s)
+        
+        s=change("☺","=",s)
+        if s!="" and s !=" ":
             z.append(s)
-            i+=1#i
+            i+=1
         c+=1#c
     for j in range (i):
         if z[j] != " " and z[j] != "":
-            fichier2.write("    "+z[j]+"\n")
+            fichier2.write("\t"+z[j]+"\n")
 
     fichier2.write("Fin")
     print("Done")
