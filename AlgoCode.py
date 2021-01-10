@@ -1,4 +1,4 @@
- def X_pos(ch1,ch2): #donner la n eme position de ch1 dans ch2
+def X_pos(ch1,ch2): #donner la n eme position de ch1 dans ch2
     x=[]
     i=0
     v=50
@@ -82,6 +82,7 @@ with open(nom1+".py", "r",encoding="utf-8") as fichier1, open(nom2+".txt", "w",e
         v=[]
         chain=[]
         t=""
+        tt=""
         if "\\n" in s:
             s=s.replace("\\n","")
         if "\n" in s:
@@ -108,6 +109,7 @@ with open(nom1+".py", "r",encoding="utf-8") as fichier1, open(nom2+".txt", "w",e
                             l+=1
                             if l==1:
                                 z.append("finsi")
+                                
                                 i+=1  
                             break
         v=[]
@@ -122,7 +124,7 @@ with open(nom1+".py", "r",encoding="utf-8") as fichier1, open(nom2+".txt", "w",e
         s=change("and","et",s)
         s=change("or","ou",s)
         s=change("not","non",s)
-        s=change("in","∈",s)
+        s=change(" in ","∈",s)
         
         if "[" in s and ":" in s and "]" in s: #sous_chain
             v.append(X_pos("[",s))
@@ -188,26 +190,25 @@ with open(nom1+".py", "r",encoding="utf-8") as fichier1, open(nom2+".txt", "w",e
             else:
                 x=0
             v=X_pos(")",s)
-            t=(s[0:x]+"ecrire("+s[s.find("input(")+6:s.find(")")]+")")
+            tt=(s[0:x]+"ecrire("+s[s.find("input(")+6:s.find(")")]+")")
             s=s[0:x]+"lire("+s[x:s.find("=")]+")"
             v=[]
         s=change("==","☺",s)
         s=change("=","←",s)
         s=change("☺","=",s)
-
         if "☼" in s :
             v=X_pos("☼",s)
             v.reverse()
             for j in range(len(v)):
                 s=s[0:v[j]]+chain[j]+'"'+s[v[j]+1:len(s)]
-        if "☼" in t :
-            v=X_pos("☼",t)
+        if "☼" in tt :
+            v=X_pos("☼",tt)
             v.reverse()
             for j in range(len(v)):
-                t=t[0:v[j]]+chain[j]+'"'+t[v[j]+1:len(t)]
+                tt=tt[0:v[j]]+chain[j]+'"'+tt[v[j]+1:len(tt)]
         
-        if t!="":   #fin
-            z.append(t)
+        if tt !="":   #fin
+            z.append(tt)
             i+=1
         if s!="" and s !=" ":
             z.append(s)
